@@ -1,0 +1,39 @@
+<?xml version="1.0"?>
+<!DOCTYPE firewall PUBLIC "-//Packetflow Firewall//Firewall Definition//EN" "http://packetflowfw.sourceforge.net/PacketFlow.dtd">
+<firewall>
+	<interfaces>
+		<interface name="cable">
+			<device>eth0</device>
+			<securitylevel>0</securitylevel>
+		</interface>
+		<interface name="inside">
+			<device>eth1</device>
+			<securitylevel>100</securitylevel>
+		</interface>
+	</interfaces>
+	<access-lists>
+		<!--
+			Allow SSH from 10.11.12.13, and DHCP from everything
+			coming in on the inside interface.
+		-->
+		<access-list incoming="inside">
+			<rule action="permit">
+				<source address="10.11.12.13" />
+				<destination protocol="tcp" port="ssh" />
+			</rule>
+			<rule action="permit">
+				<destination protocol="udp" port="bootps" />
+			</rule>
+		</access-list>
+
+		<!--
+			Allow incoming packets to the dhcp client so that it
+			can maintain a lease from the provider.
+		-->
+		<access-list incoming="cable">
+			<rule action="permit">
+				<destination protocol="udp" port="bootpc" />
+			</rule>
+		</access-list>
+	</access-lists>
+</firewall>

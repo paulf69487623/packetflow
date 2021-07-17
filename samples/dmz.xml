@@ -1,0 +1,60 @@
+<?xml version="1.0"?>
+<!DOCTYPE firewall PUBLIC "-//Packetflow Firewall//Firewall Definition//EN" "http://packetflowfw.sourceforge.net/PacketFlow.dtd">
+
+
+<!--
+	This configuration demonstrates a very basic DMZ configuration. The inside
+	network can initiate connections with both the inside and the outside.  The
+	DMZ can only initiate connections to the outside.  The outside can initiate
+	http and https connections to 192.168.1.2 in the DMZ.
+	
+	A management workstation with ip 192.168.0.10 is allowed to open an ssh
+	session to the firewall.  All machines on the inside are allowed to
+	communicate with the DHCP server running on the firewall itself.
+-->
+
+<firewall>
+	<interfaces>
+
+		<!-- The inside network is 192.168.0.0/24 -->
+		<interface name="inside">
+			<device>eth0</device>
+			<securitylevel>100</securitylevel>
+		</interface>
+
+		<!-- The DMZ1 network is 192.168.1.0/24 -->
+		<interface name="dmz1">
+			<device>eth2</device>
+			<securitylevel>50</securitylevel>
+		</interface>
+		
+		<!-- The outside interface is connected to the public Internet.
+			 It is untrusted. -->
+		<interface name="outside">
+			<device>eth1</device>
+			<securitylevel>0</securitylevel>
+		</interface>
+
+	</interfaces>
+	<access-lists>
+		<!-- Allow HTTP and HTTPs from the outside to 192.168.1.2 in the DMZ -->
+		<access-list incoming="outside" outgoing="dmz1">
+			<rule action="permit">
+				<destination address="192.168.1.2" protocol="tcp" port="http" />
+			</rule>
+			<rule action="permit">
+				<destination address="192.168.1.2" protocol="tcp" port="https" />
+			</rule>
+		</access-list>
+		<!-- Allow SSH from 192.168.0.10, and DHCP from everything in the DMZ -->
+		<access-list incoming="inside">
+			<rule action="permit">
+				<source address="192.168.0.10" />
+				<destination protocol="tcp" port="ssh" />
+			</rule>
+			<rule action="permit">
+				<destination protocol="udp" port="bootps" />
+			</rule>
+		</access-list>
+	</access-lists>
+</firewall>

@@ -1,0 +1,16 @@
+Source: packetflow
+Section: admin
+Priority: optional
+Maintainer: Paul Frieden <pfrieden@sourceforge.net>
+Build-Depends: debhelper (>= 4.0.0)
+Standards-Version: 3.6.2
+
+Package: packetflow
+Architecture: all
+Depends: python-libxml2 | python2.2-libxml2 | python2.3-libxml2 | python2.4-libxml2
+Description: PacketFlow is a command line utility to generate firewall rules.
+ PacketFlow is a command line utility that processes an XML configuration
+ to generate a set of firewall rules. It is intended to be installed and
+ run directly on the firewall itself. PacketFlow was designed to deal with
+ complex multi-interface configurations.  It can gracefully deal with 5 or
+ more interfaces.

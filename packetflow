@@ -1,0 +1,18 @@
+#!/usr/bin/python
+
+import sys
+
+sys.path.append("/usr/share/packetflow/")
+
+from Firewall import *
+from XmlParser import *
+import IptablesRenderer
+
+xmlp = XmlParser()
+if len(sys.argv) < 2:
+	print "Usage: packetflow <input file>"
+	sys.exit()
+
+firewall = xmlp.parse(sys.argv[1])
+
+IptablesRenderer.render(firewall)

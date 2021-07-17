@@ -1,0 +1,14 @@
+packetflow (1.0-1) unstable; urgency=low
+
+  * Updated for version 1.0.
+  * Fixes dependancies on old python libxml packages.
+  * Removed "unclean" rules that are no longer supported with kernel v2.6
+
+ -- Paul Frieden <pfrieden@sourceforge.net>  Tue, 15 Aug 2006 22:20:51 -0500
+
+packetflow (0.8-1) unstable; urgency=low
+
+  * Initial release
+
+ -- Paul Frieden <pfrieden@sourceforge.net>  Tue, 15 Aug 2006 22:20:51 -0500
+

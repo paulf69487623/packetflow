@@ -1,0 +1,10 @@
+To Do Items
+-----------
+* Verify that there are no errors in generated rules for all configurations.
+* Write a DTD for the rules file
+* Move to a validating parser
+* Do much more data validation
+* Provide meaningful errors when there is an error in the input
+* Support multiple ports on a destinatination access list
+* Support a flag that causes matched packets to be logged
+

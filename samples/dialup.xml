@@ -1,0 +1,39 @@
+<?xml version="1.0"?>
+<!DOCTYPE firewall PUBLIC "-//Packetflow Firewall//Firewall Definition//EN" "http://packetflowfw.sourceforge.net/PacketFlow.dtd">
+
+
+<!--
+	This configuration is targeted towards a user using a PPP connection
+	to the Internet.  From the inside, it permits SSH from 10.12.12.13
+	and DHCP from everything.
+	
+	Other than the above, only established connections are allowed.
+-->
+
+<firewall>
+	<interfaces>
+		<interface name="dialup">
+			<device>ppp0</device>
+			<securitylevel>0</securitylevel>
+		</interface>
+		<interface name="inside">
+			<device>eth0</device>
+			<securitylevel>100</securitylevel>
+		</interface>
+	</interfaces>
+	<access-lists>
+		<!--	Allow SSH from 10.11.12.13, and DHCP from everything
+				coming in on the inside interface.
+		-->
+		<access-list incoming="inside">
+			<rule action="permit">
+				<source address="10.11.12.13" />
+				<destination protocol="tcp" port="ssh" />
+			</rule>
+
+			<rule action="permit">
+				<destination protocol="udp" port="bootps" />
+			</rule>
+		</access-list>
+	</access-lists>
+</firewall>

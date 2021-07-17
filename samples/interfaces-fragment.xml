@@ -1,0 +1,41 @@
+		<!-- The inside network is 192.168.0.0/24 -->
+		<interface name="inside">
+			<device>eth0</device>
+			<securitylevel>100</securitylevel>
+		</interface>
+
+		<!-- The DMZ1 network is 192.168.1.0/24 -->
+		<interface name="dmz1">
+			<device>eth2</device>
+			<securitylevel>50</securitylevel>
+		</interface>
+
+		<!-- The DMZ2 network is 192.168.2.0/24 -->
+		<interface name="dmz2">
+			<device>eth3</device>
+			<securitylevel>50</securitylevel>
+		</interface>
+
+		<!-- The VPN0 interface is an IPSec tunnel used for remote
+			 management.  There may be multiple networks visible on
+			 the tunnel.  They are prevented from spoofing by the
+			 SAs on each tunnel. -->
+		<interface name="vpn0">
+			<device>ipsec0</device>
+			<securitylevel>25</securitylevel>
+		</interface>
+
+		<!-- The outside interface is connected to the public Internet.
+			 It is untrusted. -->
+		<interface name="outside">
+			<device>eth1</device>
+			<securitylevel>0</securitylevel>
+		</interface>
+		
+		<interface name="dialup">
+			<device>ppp0</device>
+			<securitylevel>0</securitylevel>
+		</interface>
+
+
+

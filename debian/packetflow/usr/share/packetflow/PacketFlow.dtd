@@ -1,0 +1,28 @@
+<!ELEMENT firewall		(interfaces,access-lists)>
+<!ELEMENT interfaces	(interface+)>
+<!ELEMENT interface		(device,securitylevel)>
+<!ELEMENT device		(#PCDATA)>
+<!ELEMENT securitylevel	(#PCDATA)>
+<!ELEMENT access-lists	(access-list+)>
+<!ELEMENT access-list	(rule+)>
+<!ELEMENT rule			(source?,destination?)>
+<!ELEMENT source		(#PCDATA)>
+<!ELEMENT destination	(#PCDATA)>
+
+<!ATTLIST interface name CDATA #REQUIRED>
+
+<!ATTLIST access-list
+	incoming 	CDATA #IMPLIED
+	outgoing	CDATA #IMPLIED>
+
+<!ATTLIST rule action (permit|deny) #IMPLIED>
+
+<!ATTLIST source
+	address		CDATA #IMPLIED
+	protocol	CDATA #IMPLIED
+	port		CDATA #IMPLIED>
+
+<!ATTLIST destination
+	address		CDATA #IMPLIED
+	protocol	CDATA #IMPLIED
+	port		CDATA #IMPLIED>
