@@ -49,7 +49,7 @@ class XmlParser:
 		return interface
 	
 	def doTuple(self, node):
-		print("doTuple: %s" % (node))
+		# print("doTuple: %s" % (node))
 		tupl = Tuple()
 		if 'address' in node.attrib:
 			tupl.setAddress(node.attrib['address'])
