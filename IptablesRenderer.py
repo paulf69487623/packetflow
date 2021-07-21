@@ -1,5 +1,7 @@
 import string, os
 
+import operator
+
 from Accesslist import *
 from Interface import *
 from Tuple import *
@@ -15,7 +17,8 @@ iptables -A FORWARD -p tcp ! --syn -j DROP
 # Drop invalid packets, because they shouldn't be seen here
 iptables -A FORWARD -m state --state INVALID -j DROP"""
 
-FORWARD_FINISH = """# Drop everything else
+FORWARD_FINISH = """
+# Drop everything else
 iptables -P FORWARD DROP"""
 
 INPUT_INTRO = """
@@ -35,60 +38,61 @@ iptables -P INPUT DROP"""
 
 def render(firewall):
 	interfaces = firewall.getInterfaces()
-	interfaces.sort(lambda x, y: cmp(y.getSecuritylevel(), x.getSecuritylevel()))
-	print FORWARD_INTRO
+	# interfaces.sort(lambda x, y: cmp(y.getSecuritylevel(), x.getSecuritylevel()))
+	# interfaces.sort(key=methodcaller('getSecuritylevel'))
+	print(FORWARD_INTRO)
 
 	for incoming in interfaces:
-		for outgoing in interfaces:
+		for outgoing in sorted(interfaces, key=operator.methodcaller('getSecuritylevel')):
 			accesslist = firewall.getAccesslist(incoming,outgoing)
 			if accesslist == None:
 				continue;
 			rules = accesslist.getRules()
-			print "\n# From %s to %s" % (incoming.getName(), outgoing.getName())
+			print("\n# From %s to %s" % (incoming.getName(), outgoing.getName()))
 			for rule in rules:
-				print "iptables -A FORWARD -i %s -o %s %s" % (incoming.getDevice(), outgoing.getDevice(), renderRule(rule))
+				print("iptables -A FORWARD -i %s -o %s %s" % (incoming.getDevice(), outgoing.getDevice(), renderRule(rule)))
 	
 	for interface in interfaces:
 		accesslist = firewall.getAccesslist(interface,firewall.WILDCARD)
 		if accesslist != None:
-			print "\n# From %s to *" % (interface.getName())
+			print("\n# From %s to *" % (interface.getName()))
 			rules = accesslist.getRules()
 			for rule in rules:
-				print "iptables -A FORWARD -i %s %s" % (interface.getDevice(), renderRule(rule))
+				print("iptables -A FORWARD -i %s %s" % (interface.getDevice(), renderRule(rule)))
 		
 		accesslist = firewall.getAccesslist(firewall.WILDCARD,interface)
 		if accesslist != None:
-			print "\n# From * to %s" % (interface.getName())
+			print("\n# From * to %s" % (interface.getName()))
 			rules = accesslist.getRules()
 			for rule in rules:
-				print "iptables -A FORWARD -o %s %s" % (interface.getDevice(), renderRule(rule))
+				print("iptables -A FORWARD -o %s %s" % (interface.getDevice(), renderRule(rule)))
 
 	for incoming in interfaces:
 		for outgoing in interfaces:
 			if incoming.getSecuritylevel() > outgoing.getSecuritylevel():
-				print "\n# Default from %s to %s" % (incoming.getName(), outgoing.getName())
-				print "iptables -A FORWARD -i %s -o %s -j ACCEPT" % (incoming.getDevice(), outgoing.getDevice())
+				print("\n# Default from %s to %s" % (incoming.getName(), outgoing.getName()))
+				print("iptables -A FORWARD -i %s -o %s -j ACCEPT" % (incoming.getDevice(), outgoing.getDevice()))
 
 
-	print FORWARD_FINISH
-	print INPUT_INTRO
+	print(FORWARD_FINISH)
+	print(INPUT_INTRO)
 
 	for interface in interfaces:
 		accesslist = firewall.getAccesslist(interface, None)
 		if accesslist != None:
 			rules = accesslist.getRules()
-			print "\n# Input from %s" % (interface.getName())
+			print("\n# Input from %s" % (interface.getName()))
 			for rule in rules:
-				print "iptables -A INPUT -i %s %s" % (interface.getDevice(), renderRule(rule))	
+				print("iptables -A INPUT -i %s %s" % (interface.getDevice(), renderRule(rule))	)
 					
 		accesslist = firewall.getAccesslist(None, interface)
 		if accesslist != None:
 			rules = accesslist.getRules()
-			print "\n# Output to %s" % (interface.getName())
+			print("\n# Output to %s" % (interface.getName()))
 			for rule in rules:
-				print "iptables -A INPUT -o %s %s" % (interface.getDevice(), renderRule(rule))
+				print("iptables -A INPUT -o %s %s" % (interface.getDevice(), renderRule(rule)))
 	
-	print INPUT_FINISH
+	print(INPUT_FINISH)
 
 def renderRule(rule):
 	buf = ''
@@ -126,6 +130,6 @@ def renderRule(rule):
 	elif rule.getAction() == rule.ACTION_DENY:
 		buf = buf + ' -j DROP'
 	else:
-		print "Unknown action"
+		print("Unknown action")
 	
 	return buf

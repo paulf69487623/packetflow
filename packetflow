@@ -10,7 +10,7 @@ import IptablesRenderer
 
 xmlp = XmlParser()
 if len(sys.argv) < 2:
-	print "Usage: packetflow <input file>"
+	print("Usage: packetflow <input file>")
 	sys.exit()
 
 firewall = xmlp.parse(sys.argv[1])

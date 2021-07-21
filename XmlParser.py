@@ -17,7 +17,7 @@ class XmlParser:
 		self.__rule = None
 	
 	def doRoot(self, node):
-#		print "doRoot: %s" % node
+#		print("doRoot: %s" % (node))
 		for child in node:
 			if child.tag == "interfaces":
 				self.doInterfaces(child)
@@ -25,20 +25,20 @@ class XmlParser:
 				self.doAccesslists(child)
 	
 	def doInterfaces(self, node):
-#		print "doInterfaces: %s" % node
+#		print("doInterfaces: %s" % (node))
 		for child in node:
 			if child.tag == "interface":
 				self.__firewall.addInterface(self.doInterface(child))
 	
 	
 	def doAccesslists(self, node):
-#		print "doAccesslists: %s" % node
+#		print("doAccesslists: %s" % (node))
 		for child in node:
 			if child.tag == "access-list":
 				self.__firewall.addAccesslist(self.doAccesslist(child))
 	
 	def doInterface(self, node):
-#		print "doInterface: %s" % node
+#		print("doInterface: %s" % (node))
 		interface = Interface(node.attrib['name'])
 		for child in node:
 			if child.tag == "device":
@@ -49,7 +49,7 @@ class XmlParser:
 		return interface
 	
 	def doTuple(self, node):
-		print "doTuple: %s" % node
+		print("doTuple: %s" % (node))
 		tupl = Tuple()
 		if 'address' in node.attrib:
 			tupl.setAddress(node.attrib['address'])
@@ -60,7 +60,7 @@ class XmlParser:
 		return tupl
 	
 	def doRule(self, node):
-#		print "doRule: %s" % node
+#		print("doRule: %s" % (node))
 
 		action_name = node.attrib['action']
 		if action_name == "permit":
@@ -78,7 +78,7 @@ class XmlParser:
 		return rule
 
 	def doAccesslist(self, node):
-#		print "doAccesslist: %s" % node
+#		print("doAccesslist: %s" % (node))
 		incoming = None
 		outgoing = None
 
@@ -100,10 +100,10 @@ class XmlParser:
 			outgoing = self.__firewall.getInterface(out_name)
 		
 		if incoming == None and in_name != None:
-			print "Unknown incoming interface %s" % in_name
+			print("Unknown incoming interface %s" % in_name)
 		
 		if outgoing == None and out_name != None:
-			print "Unknown outgoing interface %s" % out_name
+			print("Unknown outgoing interface %s" % out_name)
 		
 		accesslist = Accesslist(incoming, outgoing)
 		
