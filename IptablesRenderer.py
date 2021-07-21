@@ -9,7 +9,8 @@ from Rule import *
 from Util import *
 
 FORWARD_INTRO = """# Rule to allow all established traffic through
-iptables -A FORWARD -m state --state ESTABLISHED,RELATED -j ACCEPT
+# iptables -A FORWARD -m state --state ESTABLISHED,RELATED -j ACCEPT
+iptables -A FORWARD -m conntrack --ctstate ESTABLISHED,RELATED -j ACCEPT
 
 # Drop TCP packets that aren't established and don't have SYN set
 iptables -A FORWARD -p tcp ! --syn -j DROP
